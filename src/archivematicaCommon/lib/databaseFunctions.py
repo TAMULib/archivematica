@@ -229,8 +229,12 @@ def logTaskCompletedSQL(task):
     print("Logging task output to db", task.UUID)
     taskUUID = task.UUID.__str__()
     exitCode = task.results["exitCode"].__str__()
-    stdOut = task.results["stdOut"]
-    stdError = task.results["stdError"]
+    # truncate task stdout/stderror logged to the database
+    # (to prevent mysql server errors, refs. #10732) 
+    TASK_STDOUT_LIMIT = 16*1024*1024
+    TASK_STDERR_LIMIT = 16*1024*1024
+    stdOut = (task.results["stdOut"][:TASK_STDOUT_LIMIT] + '..') if len(task.results["stdOut"]) > TASK_STDOUT_LIMIT else task.results["stdOut"]
+    stdError = (task.results["stdError"][:TASK_STDERR_LIMIT] + '..') if len(task.results["stdError"]) > TASK_STDERR_LIMIT else task.results["stdError"]
 
     task = Task.objects.get(taskuuid=taskUUID)
     task.endtime = getUTCDate()
