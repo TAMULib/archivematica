@@ -2,6 +2,7 @@ from __future__ import print_function
 import ast
 from functools import wraps
 import json
+import logging
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseServerError
@@ -13,9 +14,12 @@ from agentarchives.archivesspace import ArchivesSpaceClient, AuthenticationError
 
 from components.ingest import pair_matcher
 
+logger = logging.getLogger('archivematica.dashboard')
 
 def get_as_system_client():
     repl_dict = models.MicroServiceChoiceReplacementDic.objects.get(description='ArchivesSpace Config')
+    logger.debug('repl_dict.replacementdic')
+    logger.debug(repl_dict.replacementdic)
     config = ast.literal_eval(repl_dict.replacementdic)
 
     return ArchivesSpaceClient(

@@ -678,6 +678,66 @@ BaseAppView = Backbone.View.extend({
 
   idle: false,
 
+  events: {
+    'click #sip-header-actions > .btn_remove_all_sips': 'removeAllSIPs'
+  },
+
+  unitType: 'transfer',
+
+  removeAllSIPs: function(event)
+    {
+      var url = '/transfer/delete/';
+      if (this.unitType == 'SIP') { url = '/ingest/delete/'; }
+      event.preventDefault();
+      event.stopPropagation();
+      var app = this;
+      $('<div>' +
+          '<p><strong>Are you sure you want to remove all completed ' +
+          this.unitType + 's from the dashboard? Note that this does not delete' +
+          ' the transfers or related entities.</strong></p>' +
+        '</div>').dialog(
+        {
+          modal: true,
+          resizable: false,
+          draggable: false,
+          title: 'Remove All Completed ' + this.unitType + 's',
+          width: 480,
+          buttons: [
+              {
+                text: 'Confirm',
+                click: function() {
+                  var self = this;
+                  $.ajax({url: url, method: 'DELETE'})
+                    .done(function(data) {
+                      if (data.removed.length == 0) {
+                          alert('There were no completed ' + app.unitType +
+                                's to remove');
+                      } else {
+                        console.log('Successfully removed the following ' +
+                            app.unitType + 's: ' + data.removed.join(', '));
+                      }
+                    })
+                    .fail(function(data) {
+                      alert('Failed to remove all completed ' +
+                            app.unitType + 's');
+                      console.log('Failed to remove all completed ' +
+                                  app.unitType + 's');
+                      console.log(data);
+                    })
+                    .always(function() {
+                      $(self).dialog('close');
+                    });
+                }
+              },
+              {
+                text: 'Cancel',
+                click: function() {
+                  $(this).dialog('close');
+                }
+              }]
+        });
+    },
+
   initialize: function(options)
     {
       this.statusUrl = options.statusUrl;

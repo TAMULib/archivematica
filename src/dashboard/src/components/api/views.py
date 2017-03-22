@@ -113,7 +113,10 @@ def get_unit_status(unit_uuid, unit_type):
     :return: Dict with status info.
     """
     ret = {}
-    job = models.Job.objects.filter(sipuuid=unit_uuid).filter(unittype=unit_type).order_by('-createdtime', '-createdtimedec')[0]
+    job = models.Job.objects.filter(
+        sipuuid=unit_uuid).filter(
+            unittype=unit_type).order_by(
+                '-createdtime', '-createdtimedec')[0]
     ret['microservice'] = job.jobtype
     if job.currentstep == 'Awaiting decision':
         ret['status'] = 'USER_INPUT'
@@ -217,6 +220,18 @@ def mark_hidden(request, unit_type, unit_uuid):
     :param unit_uuid: UUID of the Transfer or SIP
     """
     return unit_views.mark_hidden(request, unit_type, unit_uuid)
+
+
+@_api_endpoint(expected_methods=['DELETE'])
+def mark_completed_hidden(request, unit_type):
+    """Mark all completed (``unit_type``) units as deleted.
+
+    This is just a wrapper around unit.views.mark_completed_hidden that
+    verifies API auth.
+
+    :param unit_type: 'transfer' or 'ingest' for Transfers or SIPs, respectively
+    """
+    return unit_views.mark_completed_hidden(request, unit_type)
 
 
 @_api_endpoint(expected_methods=['POST'])

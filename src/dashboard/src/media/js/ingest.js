@@ -439,7 +439,8 @@ $(function()
 
     window.AppView = BaseAppView.extend({
       el: $('#sip-container'),
-      pagingCookie: 'archivematicaCurrentIngestPage'
+      pagingCookie: 'archivematicaCurrentIngestPage',
+      unitType: 'SIP'
     });
 
     $.fn.tooltip = tooltipPlugin;
