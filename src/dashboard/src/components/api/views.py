@@ -230,6 +230,12 @@ def mark_completed_hidden(request, unit_type):
     verifies API auth.
 
     :param unit_type: 'transfer' or 'ingest' for Transfers or SIPs, respectively
+
+    Usage::
+
+        $ curl -X DELETE \
+               -H"Authorization: ApiKey test:5c2f6c8fbaff3b3038f89ab05b1c2267e447581e" \
+               'http://localhost/api/transfer/delete/'
     """
     return unit_views.mark_completed_hidden(request, unit_type)
 
