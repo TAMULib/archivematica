@@ -18,8 +18,6 @@ logger = logging.getLogger('archivematica.dashboard')
 
 def get_as_system_client():
     repl_dict = models.MicroServiceChoiceReplacementDic.objects.get(description='ArchivesSpace Config')
-    logger.debug('repl_dict.replacementdic')
-    logger.debug(repl_dict.replacementdic)
     config = ast.literal_eval(repl_dict.replacementdic)
 
     return ArchivesSpaceClient(
