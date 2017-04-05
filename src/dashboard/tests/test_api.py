@@ -116,3 +116,28 @@ class TestAPI(TestCase):
         assert 'microservice' in status
         assert status['status'] == 'COMPLETE'
         assert len(completed) == 1
+
+
+class TestAPI2(TestCase):
+    """Test API endpoints."""
+    fixture_files = ['units.json']
+    fixtures = [os.path.join(THIS_DIR, 'fixtures', p) for p in fixture_files]
+
+    def test_get_unit_status_multiple(self):
+        """When the database contains 5 units of the following types:
+        1. a failed transfer b949773d-7cf7-4c1e-aea5-ccbf65b70ccd
+        2. a completed transfer 85216028-1150-4321-abb3-31ea570a341b
+        3. a rejected transfer c9cce131-7bd9-41c8-82ab-483190961ae2
+        4. a transfer awaiting user input 37a07d96-6fc0-4002-b269-471a58783805
+        5. a transfer in backlog 5d0ab97f-a45b-4e0f-9cb6-90ee3a404549
+        then ``completed_units_efficient`` should return 3: the failed,
+        the completed, and the in-backlog transfer.
+        """
+        load_fixture(['jobs-various.json'])
+        completed = helpers.completed_units_efficient(
+            unit_type='transfer', include_failed=True)
+        print(completed)
+        assert len(completed) == 3
+        assert '85216028-1150-4321-abb3-31ea570a341b' in completed
+        assert '5d0ab97f-a45b-4e0f-9cb6-90ee3a404549' in completed
+        assert 'b949773d-7cf7-4c1e-aea5-ccbf65b70ccd' in completed
