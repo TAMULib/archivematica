@@ -215,6 +215,7 @@ def start_transfer_logged_in(request):
 
 
 def start_transfer(transfer_name, transfer_type, accession, paths, row_ids):
+    LOGGER.info('For you information, we are starting a transfer with paths %s', paths)
     """
     Start a new transfer.
 

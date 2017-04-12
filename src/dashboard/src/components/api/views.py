@@ -222,6 +222,8 @@ def mark_hidden(request, unit_type, unit_uuid):
 
 
 def start_transfer_api(request):
+    LOGGER.info('For your information, we are starting a transfer api.');
+    LOGGER.debug('For your debugging information, we are starting a transfer api.');
     """
     Endpoint for starting a transfer if calling remote and using an API key.
     """
@@ -237,7 +239,7 @@ def start_transfer_api(request):
             content_type='application/json'
         )
 
-    LOGGER.info('Got the following POST, which should have a name and type: ' + request.POST)
+    LOGGER.info('Got the following POST, which has name and type: %s', request.POST.get('name', ''))
     transfer_name = request.POST.get('name', '')
     transfer_type = request.POST.get('type', '')
     accession = request.POST.get('accession', '')
