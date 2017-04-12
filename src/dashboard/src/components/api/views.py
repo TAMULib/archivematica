@@ -237,6 +237,7 @@ def start_transfer_api(request):
             content_type='application/json'
         )
 
+    LOGGER.info('Got the following POST, which should have a name and type: ' + request.POST)
     transfer_name = request.POST.get('name', '')
     transfer_type = request.POST.get('type', '')
     accession = request.POST.get('accession', '')
